@@ -2,19 +2,38 @@ import React from 'react';
 import styled from 'styled-components';
 import { ApiResponseType } from '@/utils/api';
 
-const SuggestionList: React.FC<{ suggestions: ApiResponseType[] }> = ({ suggestions }) => {
+interface SuggestionListProps {
+  suggestions: ApiResponseType[];
+  previousQueries: string[];
+  onRemoveQuery: (query: string) => void;
+  onSuggestionClick: (query: string) => void;
+}
+
+const SuggestionList: React.FC<SuggestionListProps> = ({
+  suggestions,
+  previousQueries,
+  onRemoveQuery,
+  onSuggestionClick,
+}) => {
   return (
     <SuggestionsContainer>
       <SuggestionsHeader>추천검색어</SuggestionsHeader>
-      {suggestions.length > 0 ? (
-        <SuggestionsList>
-          {suggestions.map((suggestion, index) => (
-            <SuggestionItem key={index}>{suggestion.sickNm}</SuggestionItem>
-          ))}
-        </SuggestionsList>
-      ) : (
-        <NoSuggestions>검색어 없음</NoSuggestions>
-      )}
+      <SuggestionsList>
+        {suggestions.map((suggestion, index) => (
+          <SuggestionItem key={index} onClick={() => onSuggestionClick(suggestion.sickNm)}>
+            {suggestion.sickNm}
+          </SuggestionItem>
+        ))}
+
+        {previousQueries.length > 0 && <Separator />}
+
+        {previousQueries.map((query, index) => (
+          <PreviousQueryItem key={index}>
+            {query}
+            <span onClick={() => onRemoveQuery(query)}>x</span>
+          </PreviousQueryItem>
+        ))}
+      </SuggestionsList>
     </SuggestionsContainer>
   );
 };
@@ -63,9 +82,26 @@ const SuggestionItem = styled.li`
   }
 `;
 
-const NoSuggestions = styled.div`
-  margin-top: 10px;
-  text-align: center;
+const Separator = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 10px 0;
+`;
+
+const PreviousQueryItem = styled.div`
+  padding: 8px 20px;
   font-size: 20px;
-  color: grey;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #eaeaea;
+  }
+
+  span {
+    color: red;
+    margin-left: 10px;
+  }
 `;
