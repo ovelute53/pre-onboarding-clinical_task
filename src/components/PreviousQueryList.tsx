@@ -1,11 +1,19 @@
 import React from 'react';
 
-const PreviousQueryList: React.FC<{ queries: string[] }> = ({ queries }) => {
+type Props = {
+  queries: string[];
+  onRemove: (query: string) => void;
+};
+
+const PreviousQueryList: React.FC<Props> = ({ queries, onRemove }) => {
   return (
     <div>
-      {queries.slice(0, 5).map((query, index) => (
-        <div key={index} style={{ padding: '5px' }}>
+      {queries.map((query, index) => (
+        <div key={index} style={{ display: 'flex', alignItems: 'center', padding: '5px' }}>
           {query}
+          <span style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => onRemove(query)}>
+            x
+          </span>
         </div>
       ))}
     </div>
