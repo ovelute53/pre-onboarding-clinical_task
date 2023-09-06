@@ -30,7 +30,7 @@ const useSearch = () => {
     }, 500);
   };
 
-  return { query, suggestions, handleInputChange };
+  return { query, setQuery, suggestions, handleInputChange };
 };
 
 export default useSearch;

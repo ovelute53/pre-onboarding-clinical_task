@@ -8,25 +8,29 @@ import usePreviousQueries from '@/custom/usePreviousQueries';
 
 export const SearchBox: React.FC = () => {
   const { previousQueries, addQuery, removeQuery } = usePreviousQueries();
-  const { query, suggestions, handleInputChange } = useSearch();
+  const { query, setQuery, suggestions, handleInputChange } = useSearch();
 
-  const handleInputChangeWithPrevious = async (newValue: string) => {
-    handleInputChange(newValue);
-    if (newValue && !previousQueries.includes(newValue)) {
-      addQuery(newValue);
-    }
+  const handleSuggestionClick = (suggestion: string) => {
+    setQuery(suggestion);
   };
 
   return (
     <Wrapper>
       <RelativeWrapper>
         <SearchInput value={query} onChange={handleInputChange} onAddQuery={addQuery} />
-        {query &&
-          (suggestions.length ? (
-            <SuggestionList suggestions={suggestions} />
-          ) : (
+        {suggestions.length && query ? (
+          <SuggestionList
+            suggestions={suggestions}
+            previousQueries={previousQueries}
+            onRemoveQuery={removeQuery}
+            onSuggestionClick={handleSuggestionClick}
+          />
+        ) : (
+          previousQueries.length > 0 &&
+          query.trim() !== '' && (
             <PreviousQueryList queries={previousQueries} onRemove={removeQuery} />
-          ))}
+          )
+        )}
       </RelativeWrapper>
     </Wrapper>
   );
