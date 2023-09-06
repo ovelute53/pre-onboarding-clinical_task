@@ -1,23 +1,31 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React from 'react';
 import SearchInput from '@/components/SearchInput';
 import SuggestionList from '@/components/SuggestionList';
 import PreviousQueryList from '@/components/PreviousQueryList';
 import useSearch from '@/custom/useSearch';
+import usePreviousQueries from '@/custom/usePreviousQueries';
 
 export const SearchBox: React.FC = () => {
-  const [previousQueries, setPreviousQueries] = useState<string[]>([]);
+  const { previousQueries, addQuery, removeQuery } = usePreviousQueries();
   const { query, suggestions, handleInputChange } = useSearch();
+
+  const handleInputChangeWithPrevious = async (newValue: string) => {
+    handleInputChange(newValue);
+    if (newValue && !previousQueries.includes(newValue)) {
+      addQuery(newValue);
+    }
+  };
 
   return (
     <Wrapper>
       <RelativeWrapper>
-        <SearchInput value={query} onChange={handleInputChange} />
+        <SearchInput value={query} onChange={handleInputChangeWithPrevious} />
         {query &&
           (suggestions.length ? (
             <SuggestionList suggestions={suggestions} />
           ) : (
-            <PreviousQueryList queries={previousQueries} />
+            <PreviousQueryList queries={previousQueries} onRemove={removeQuery} />
           ))}
       </RelativeWrapper>
     </Wrapper>
