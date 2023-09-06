@@ -20,7 +20,7 @@ export const SearchBox: React.FC = () => {
   return (
     <Wrapper>
       <RelativeWrapper>
-        <SearchInput value={query} onChange={handleInputChangeWithPrevious} />
+        <SearchInput value={query} onChange={handleInputChange} onAddQuery={addQuery} />
         {query &&
           (suggestions.length ? (
             <SuggestionList suggestions={suggestions} />

@@ -7,9 +7,22 @@ interface SearchInputProps {
   onChange: (value: string) => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  onAddQuery: (value: string) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ onChange, value, onFocus, onBlur }) => {
+const SearchInput: React.FC<SearchInputProps> = ({
+  onChange,
+  value,
+  onFocus,
+  onBlur,
+  onAddQuery,
+}) => {
+  const handleSearchClick = () => {
+    if (value && onAddQuery) {
+      onAddQuery(value);
+    }
+  };
+
   return (
     <SearchWrapper>
       <InputSearch
@@ -20,7 +33,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ onChange, value, onFocus, onB
         onFocus={onFocus}
         onBlur={onBlur}
       />
-      <SearchIconWrapper>
+      <SearchIconWrapper onClick={handleSearchClick}>
         <SearchIcon src={Search} />
       </SearchIconWrapper>
     </SearchWrapper>
