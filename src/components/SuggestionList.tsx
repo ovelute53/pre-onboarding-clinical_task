@@ -15,12 +15,26 @@ const SuggestionList: React.FC<SuggestionListProps> = ({
   onRemoveQuery,
   onSuggestionClick,
 }) => {
+  const handleKeyDown = (event: React.KeyboardEvent, suggestion: ApiResponseType) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      onSuggestionClick(suggestion.sickNm);
+      event.preventDefault();
+    }
+  };
+
   return (
     <SuggestionsContainer>
       <SuggestionsHeader>추천검색어</SuggestionsHeader>
       <SuggestionsList>
         {suggestions.map((suggestion, index) => (
-          <SuggestionItem key={index} onClick={() => onSuggestionClick(suggestion.sickNm)}>
+          <SuggestionItem
+            key={index}
+            tabIndex={0}
+            role="button"
+            aria-label={suggestion.sickNm}
+            onClick={() => onSuggestionClick(suggestion.sickNm)}
+            onKeyDown={event => handleKeyDown(event, suggestion)}
+          >
             {suggestion.sickNm}
           </SuggestionItem>
         ))}
