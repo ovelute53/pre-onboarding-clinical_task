@@ -2,10 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import Search from '@/assets/search.svg';
 
-const SearchInput: React.FC<{ onChange: (value: string) => void; value: string }> = ({
-  onChange,
-  value,
-}) => {
+interface SearchInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
+}
+
+const SearchInput: React.FC<SearchInputProps> = ({ onChange, value, onFocus, onBlur }) => {
   return (
     <SearchWrapper>
       <InputSearch
@@ -13,6 +17,8 @@ const SearchInput: React.FC<{ onChange: (value: string) => void; value: string }
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder="질환명을 입력해 주세요."
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       <SearchIconWrapper>
         <SearchIcon src={Search} />
