@@ -9,7 +9,7 @@ const useSearch = () => {
 
   const handleInputChange = async (newValue: string) => {
     setQuery(newValue);
-    const cachedData = getFromCache(newValue);
+    const cachedData = await getFromCache(newValue);
 
     if (cachedData) {
       setSuggestions(cachedData);
@@ -25,7 +25,7 @@ const useSearch = () => {
       const filteredData = data.filter((item: ApiResponseType) =>
         item.sickNm.toLowerCase().includes(newValue.toLowerCase()),
       );
-      setCache(newValue, filteredData);
+      await setCache(newValue, filteredData);
       setSuggestions(filteredData);
     }, 500);
   };
