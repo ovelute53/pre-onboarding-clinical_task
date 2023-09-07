@@ -1,7 +1,12 @@
 import { SearchBox } from './pages/SearchBox';
+import { SearchProvider } from '@/contexts/SearchProviders';
 
 function App() {
-  return <SearchBox />;
+  return (
+    <SearchProvider>
+      <SearchBox />
+    </SearchProvider>
+  );
 }
 
 export default App;

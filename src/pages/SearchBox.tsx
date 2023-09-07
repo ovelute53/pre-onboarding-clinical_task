@@ -3,12 +3,18 @@ import React from 'react';
 import SearchInput from '@/components/SearchInput';
 import SuggestionList from '@/components/SuggestionList';
 import PreviousQueryList from '@/components/PreviousQueryList';
-import useSearch from '@/custom/useSearch';
-import usePreviousQueries from '@/custom/usePreviousQueries';
+import { useSearchContext } from '@/custom/useSearchContext';
 
 export const SearchBox: React.FC = () => {
-  const { previousQueries, addQuery, removeQuery } = usePreviousQueries();
-  const { query, setQuery, suggestions, handleInputChange } = useSearch();
+  const {
+    previousQueries,
+    addQuery,
+    removeQuery,
+    query,
+    setQuery,
+    suggestions,
+    handleInputChange,
+  } = useSearchContext();
 
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion);
