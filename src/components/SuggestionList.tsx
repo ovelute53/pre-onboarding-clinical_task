@@ -15,9 +15,9 @@ const SuggestionList: React.FC<SuggestionListProps> = ({
   onRemoveQuery,
   onSuggestionClick,
 }) => {
-  const handleKeyDown = (event: React.KeyboardEvent, suggestion: ApiResponseType) => {
+  const handleKeyDown = (event: React.KeyboardEvent, query: string) => {
     if (event.key === 'Enter' || event.key === ' ') {
-      onSuggestionClick(suggestion.sickNm);
+      onSuggestionClick(query);
       event.preventDefault();
     }
   };
@@ -26,6 +26,35 @@ const SuggestionList: React.FC<SuggestionListProps> = ({
     <SuggestionsContainer>
       <SuggestionsHeader>추천검색어</SuggestionsHeader>
       <SuggestionsList>
+        {previousQueries.length > 0 && (
+          <PreviousQueriesContainer>
+            {previousQueries.map((query, index) => (
+              <React.Fragment key={index}>
+                <PreviousQuerySpan
+                  onClick={() => onSuggestionClick(query)}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={query}
+                  onKeyDown={event => handleKeyDown(event, query)}
+                >
+                  {query}
+                </PreviousQuerySpan>
+                <DeleteIcon
+                  onClick={e => {
+                    e.stopPropagation();
+                    onRemoveQuery(query);
+                  }}
+                >
+                  ✖
+                </DeleteIcon>
+                {index !== previousQueries.length - 1 && ', '}
+              </React.Fragment>
+            ))}
+          </PreviousQueriesContainer>
+        )}
+
+        {previousQueries.length > 0 && suggestions.length > 0 && <Separator />}
+
         {suggestions.map((suggestion, index) => (
           <SuggestionItem
             key={index}
@@ -33,19 +62,10 @@ const SuggestionList: React.FC<SuggestionListProps> = ({
             role="button"
             aria-label={suggestion.sickNm}
             onClick={() => onSuggestionClick(suggestion.sickNm)}
-            onKeyDown={event => handleKeyDown(event, suggestion)}
+            onKeyDown={event => handleKeyDown(event, suggestion.sickNm)}
           >
             {suggestion.sickNm}
           </SuggestionItem>
-        ))}
-
-        {previousQueries.length > 0 && <Separator />}
-
-        {previousQueries.map((query, index) => (
-          <PreviousQueryItem key={index}>
-            {query}
-            <span onClick={() => onRemoveQuery(query)}>x</span>
-          </PreviousQueryItem>
         ))}
       </SuggestionsList>
     </SuggestionsContainer>
@@ -103,19 +123,29 @@ const Separator = styled.div`
   margin: 10px 0;
 `;
 
-const PreviousQueryItem = styled.div`
+const PreviousQueriesContainer = styled.div`
   padding: 8px 20px;
-  font-size: 20px;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+`;
+
+const PreviousQuerySpan = styled.span`
+  font-size: 20px;
   cursor: pointer;
-
+  margin-right: 5px;
+  transition: opacity 0.3s;
   &:hover {
-    background-color: #eaeaea;
+    text-decoration: underline;
   }
+`;
 
-  span {
-    color: red;
-    margin-left: 10px;
+const DeleteIcon = styled.span`
+  cursor: pointer;
+  color: red;
+  transition: opacity 0.3s;
+  margin-right: 5px;
+  &:hover {
+    opacity: 0.7;
   }
 `;

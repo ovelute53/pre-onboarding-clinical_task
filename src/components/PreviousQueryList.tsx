@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
 type Props = {
   queries: string[];
@@ -13,7 +13,7 @@ const PreviousQueryList: React.FC<Props> = ({ queries, onRemove }) => {
         <React.Fragment key={index}>
           <QueryItem>
             {query}
-            <span onClick={() => onRemove(query)}>x</span>
+            <DeleteButton onClick={() => onRemove(query)}>X</DeleteButton>
           </QueryItem>
           {index !== queries.length - 1 && <span>, </span>}
         </React.Fragment>
@@ -26,7 +26,7 @@ export default PreviousQueryList;
 
 const QueryListContainer = styled.div`
   position: absolute;
-  top: 110%;
+  top: 100%;
   left: 0;
   width: 100%;
   border: 1px solid #007be9;
@@ -38,17 +38,29 @@ const QueryListContainer = styled.div`
   overflow: hidden;
 `;
 
-const QueryItem = styled.span`
+const QueryItem = styled.li`
   font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
   cursor: pointer;
 
   &:hover {
     background-color: #eaeaea;
   }
+`;
 
-  & > span {
-    color: red;
-    margin-left: 5px;
-    cursor: pointer;
+const DeleteButton = styled.span`
+  color: red;
+  padding: 4px 8px;
+  margin-left: 5px;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #eaeaea;
   }
 `;

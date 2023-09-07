@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import React from 'react';
 import SearchInput from '@/components/SearchInput';
 import SuggestionList from '@/components/SuggestionList';
-import PreviousQueryList from '@/components/PreviousQueryList';
 import { useSearchContext } from '@/custom/useSearchContext';
 
 export const SearchBox: React.FC = () => {
@@ -24,18 +23,13 @@ export const SearchBox: React.FC = () => {
     <Wrapper>
       <RelativeWrapper>
         <SearchInput value={query} onChange={handleInputChange} onAddQuery={addQuery} />
-        {suggestions.length && query ? (
+        {query.trim() !== '' && (suggestions.length > 0 || previousQueries.length > 0) && (
           <SuggestionList
             suggestions={suggestions}
             previousQueries={previousQueries}
             onRemoveQuery={removeQuery}
             onSuggestionClick={handleSuggestionClick}
           />
-        ) : (
-          previousQueries.length > 0 &&
-          query.trim() !== '' && (
-            <PreviousQueryList queries={previousQueries} onRemove={removeQuery} />
-          )
         )}
       </RelativeWrapper>
     </Wrapper>
