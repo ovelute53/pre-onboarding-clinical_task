@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ApiResponseType } from '@/utils/api';
 
 interface SuggestionListProps {
+  query: string;
   suggestions: ApiResponseType[];
   previousQueries: string[];
   onRemoveQuery: (query: string) => void;
@@ -10,6 +11,7 @@ interface SuggestionListProps {
 }
 
 const SuggestionList: React.FC<SuggestionListProps> = ({
+  query,
   suggestions,
   previousQueries,
   onRemoveQuery,
@@ -26,47 +28,53 @@ const SuggestionList: React.FC<SuggestionListProps> = ({
     <SuggestionsContainer>
       <SuggestionsHeader>추천검색어</SuggestionsHeader>
       <SuggestionsList>
-        {previousQueries.length > 0 && (
-          <PreviousQueriesContainer>
-            {previousQueries.map((query, index) => (
-              <React.Fragment key={index}>
-                <PreviousQuerySpan
-                  onClick={() => onSuggestionClick(query)}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={query}
-                  onKeyDown={event => handleKeyDown(event, query)}
-                >
-                  {query}
-                </PreviousQuerySpan>
-                <DeleteIcon
-                  onClick={e => {
-                    e.stopPropagation();
-                    onRemoveQuery(query);
-                  }}
-                >
-                  ✖
-                </DeleteIcon>
-                {index !== previousQueries.length - 1 && ', '}
-              </React.Fragment>
+        {query.trim() === '' ? (
+          <NoQueryMessage>입력된 검색어가 없습니다.</NoQueryMessage>
+        ) : (
+          <>
+            {previousQueries.length > 0 && (
+              <PreviousQueriesContainer>
+                {previousQueries.map((query, index) => (
+                  <React.Fragment key={index}>
+                    <PreviousQuerySpan
+                      onClick={() => onSuggestionClick(query)}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={query}
+                      onKeyDown={event => handleKeyDown(event, query)}
+                    >
+                      {query}
+                    </PreviousQuerySpan>
+                    <DeleteIcon
+                      onClick={e => {
+                        e.stopPropagation();
+                        onRemoveQuery(query);
+                      }}
+                    >
+                      ✖
+                    </DeleteIcon>
+                    {index !== previousQueries.length - 1 && ', '}
+                  </React.Fragment>
+                ))}
+              </PreviousQueriesContainer>
+            )}
+
+            {previousQueries.length > 0 && suggestions.length > 0 && <Separator />}
+
+            {suggestions.map((suggestion, index) => (
+              <SuggestionItem
+                key={index}
+                tabIndex={0}
+                role="button"
+                aria-label={suggestion.sickNm}
+                onClick={() => onSuggestionClick(suggestion.sickNm)}
+                onKeyDown={event => handleKeyDown(event, suggestion.sickNm)}
+              >
+                {suggestion.sickNm}
+              </SuggestionItem>
             ))}
-          </PreviousQueriesContainer>
+          </>
         )}
-
-        {previousQueries.length > 0 && suggestions.length > 0 && <Separator />}
-
-        {suggestions.map((suggestion, index) => (
-          <SuggestionItem
-            key={index}
-            tabIndex={0}
-            role="button"
-            aria-label={suggestion.sickNm}
-            onClick={() => onSuggestionClick(suggestion.sickNm)}
-            onKeyDown={event => handleKeyDown(event, suggestion.sickNm)}
-          >
-            {suggestion.sickNm}
-          </SuggestionItem>
-        ))}
       </SuggestionsList>
     </SuggestionsContainer>
   );
@@ -105,6 +113,13 @@ const SuggestionsList = styled.ul`
   width: 490px;
   max-height: 200px;
   overflow: auto;
+`;
+
+const NoQueryMessage = styled.div`
+  padding: 20px;
+  font-size: 20px;
+  text-align: center;
+  color: grey;
 `;
 
 const SuggestionItem = styled.li`
